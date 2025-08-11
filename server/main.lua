@@ -268,4 +268,3 @@ RegisterCommand('checkcooldown', function(source)
 end, false)
 --]]
 
--- Emergency exit command removed as per user request
