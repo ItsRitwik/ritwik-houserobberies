@@ -17,7 +17,6 @@ dependencies {
     'qb-core',
     'ox_lib',
     'ps-ui',
-    'k4mb1_shells'
 }
 
 -- Optional dependencies for enhanced features
