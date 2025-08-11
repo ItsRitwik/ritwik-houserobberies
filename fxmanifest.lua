@@ -15,11 +15,12 @@ repository 'https://github.com/ItsRitwik/ritwik-houserobberies'
 -- Dependencies
 dependencies {
     'qb-core',
-    'ox_lib'
+    'ox_lib',
+    'ps-ui',
+    'k4mb1_shells'
 }
 
 -- Optional dependencies for enhanced features
--- ps-ui: Advanced minigames (Circle, Maze, Scrambler, VarHack, Thermite)
 -- okok-notify: Enhanced notification system
 -- Various dispatch systems: ps-dispatch, aty_dispatch, qs-dispatch, cd_dispatch
 

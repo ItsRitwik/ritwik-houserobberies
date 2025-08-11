@@ -12,12 +12,12 @@ Before installing, ensure you have:
 
 - ✅ **QBCore Framework** (Latest version)
 - ✅ **ox_lib** (Required for UI and skillchecks)
+- ✅ **ps-ui** (Required for minigames)
+- ✅ **k4mb1 free shells** (Required for house interiors)
 - ✅ **Server console access** (For resource management)
-- ✅ **Database access** (No database changes needed, but good to have)
 - ✅ **FTP/File access** to your server
 
 ### Optional but Recommended:
-- ⭐ **ps-ui** (For advanced minigames)
 - ⭐ **okok-notify** (Enhanced notifications)
 - ⭐ **Dispatch system** (ps-dispatch, aty_dispatch, etc.)
 

@@ -34,11 +34,12 @@ A comprehensive house robbery system for FiveM servers, built on QBCore framewor
 
 ## 📋 Requirements
 
-### Dependencies
+### Required Dependencies
 
 - **QBCore Framework** - Latest version
 - **ox_lib** - For UI components and skillchecks
-- **ps-ui** - For advanced minigames *(Optional but recommended)*
+- **ps-ui** - For advanced minigames (Circle, Maze, Scrambler, VarHack, Thermite)
+- **k4mb1 free shells** - For house interior shells
 
 ### Optional Dependencies
 
