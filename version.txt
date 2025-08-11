@@ -1,0 +1,17 @@
+2.0.0
+
+Changelog for version 2.0.0:
+- Added comprehensive cooldown system with Steam ID/License tracking
+- Fixed critical loot spawning variable shadowing bug
+- Implemented emergency exit system for stuck players
+- Enhanced Black Market economy with 37+ unique items
+- Added animation persistence during minigames
+- Improved multiple minigame support and fallback systems
+- Added debug commands and comprehensive error handling
+- Fixed model loading issues and timeout handling
+- Rebalanced economy for optimal server integration
+
+Based on md-houserobberies by Mustachedom
+Enhanced by Ritwik
+
+⚠️ CRITICAL: Do not change resource name "ritwik-houserobberies" - hardcoded throughout system

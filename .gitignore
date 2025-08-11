@@ -1,0 +1,48 @@
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE/Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temporary Files
+*.tmp
+*.temp
+temp/
+
+# Backup Files
+*.bak
+*.backup
+
+# FiveM Specific
+cache/
+citizen/
+
+# Development Files
+test/
+debug/
+.env
+.env.local
+
+# Archive Files
+*.zip
+*.rar
+*.7z
+
+# Personal Notes
+notes.txt
+todo.txt
+personal/

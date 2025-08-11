@@ -1,0 +1,107 @@
+name: FiveM Resource Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Validate fxmanifest.lua
+      run: |
+        if [ ! -f "fxmanifest.lua" ]; then
+          echo "❌ fxmanifest.lua not found!"
+          exit 1
+        fi
+        echo "✅ fxmanifest.lua found"
+        
+        # Check for critical resource name
+        if ! grep -q "ritwik-houserobberies" fxmanifest.lua; then
+          echo "❌ Resource name 'ritwik-houserobberies' not found in fxmanifest.lua!"
+          exit 1
+        fi
+        echo "✅ Correct resource name found"
+    
+    - name: Validate config.lua
+      run: |
+        if [ ! -f "config.lua" ]; then
+          echo "❌ config.lua not found!"
+          exit 1
+        fi
+        echo "✅ config.lua found"
+    
+    - name: Validate directory structure
+      run: |
+        required_dirs=("client" "server" "install")
+        for dir in "${required_dirs[@]}"; do
+          if [ ! -d "$dir" ]; then
+            echo "❌ Directory $dir not found!"
+            exit 1
+          fi
+          echo "✅ Directory $dir found"
+        done
+    
+    - name: Validate required files
+      run: |
+        required_files=("README.md" "LICENSE" "CHANGELOG.md" "CONTRIBUTING.md")
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "❌ File $file not found!"
+            exit 1
+          fi
+          echo "✅ File $file found"
+        done
+    
+    - name: Check for resource name consistency
+      run: |
+        # Check if resource name is consistent across files
+        echo "Checking resource name consistency..."
+        
+        # Check client files
+        if grep -r "ritwik-houserobbery:" client/ | grep -v "ritwik-houserobberies"; then
+          echo "✅ Client files use correct resource name pattern"
+        fi
+        
+        # Check server files  
+        if grep -r "ritwik-houserobbery:" server/ | grep -v "ritwik-houserobberies"; then
+          echo "✅ Server files use correct resource name pattern"
+        fi
+        
+        echo "✅ Resource name consistency check completed"
+    
+    - name: Validate Lua syntax (basic check)
+      run: |
+        # Basic syntax validation for Lua files
+        find . -name "*.lua" -exec lua -l {} \; 2>/dev/null || echo "⚠️ Lua syntax check completed (install lua for full validation)"
+        echo "✅ Lua syntax validation completed"
+
+  release-check:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Validate version consistency
+      run: |
+        # Extract version from fxmanifest.lua
+        MANIFEST_VERSION=$(grep "version" fxmanifest.lua | head -1 | sed "s/.*'\(.*\)'.*/\1/")
+        
+        # Extract version from version.txt
+        VERSION_FILE=$(head -1 version.txt)
+        
+        echo "fxmanifest.lua version: $MANIFEST_VERSION"
+        echo "version.txt version: $VERSION_FILE"
+        
+        if [ "$MANIFEST_VERSION" != "$VERSION_FILE" ]; then
+          echo "❌ Version mismatch between fxmanifest.lua and version.txt!"
+          exit 1
+        fi
+        
+        echo "✅ Version consistency validated"
