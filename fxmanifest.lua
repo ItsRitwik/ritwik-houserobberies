@@ -10,7 +10,7 @@ version '2.0.0'
 license 'MIT'
 
 -- GitHub repository
-repository 'https://github.com/YourUsername/ritwik-houserobberies'
+repository 'https://github.com/ItsRitwik/ritwik-houserobberies'
 
 -- Dependencies
 dependencies {
