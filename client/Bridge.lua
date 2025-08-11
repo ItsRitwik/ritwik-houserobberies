@@ -58,17 +58,17 @@ function progressbar(text, time, anim)
 
   function minigame(tier)
 	local game = Config.Minigames
-	print("^2[DEBUG] Starting minigame for tier: " .. tier .. " with game type: " .. Config.Tiergames[tier])
+	-- print("^2[DEBUG] Starting minigame for tier: " .. tier .. " with game type: " .. Config.Tiergames[tier])
 	
 	local result = false
 	
 	if Config.Tiergames[tier] == 'ps_circle' then
-		print("^2[DEBUG] Attempting ps_circle minigame...")
+		-- print("^2[DEBUG] Attempting ps_circle minigame...")
 		if GetResourceState('ps-ui') ~= 'started' then
 			print("^1[ERROR] ps-ui resource is not started! Current state: " .. GetResourceState('ps-ui'))
 			result = false
 		else
-			print("^2[DEBUG] ps-ui resource is available, starting Circle minigame")
+			-- print("^2[DEBUG] ps-ui resource is available, starting Circle minigame")
 			local check = nil
 			local finished = false
 			
@@ -77,7 +77,7 @@ function progressbar(text, time, anim)
 				exports['ps-ui']:Circle(function(success)
 					check = success
 					finished = true
-					print("^2[DEBUG] ps_circle callback received - result: " .. tostring(success))
+					-- print("^2[DEBUG] ps_circle callback received - result: " .. tostring(success))
 				end, game['ps_circle'].amount, game['ps_circle'].speed)
 			end)
 			
@@ -85,7 +85,7 @@ function progressbar(text, time, anim)
 				print("^1[ERROR] Failed to call ps-ui Circle: " .. tostring(error_msg))
 				result = false
 			else
-				print("^2[DEBUG] ps-ui Circle called successfully, waiting for completion...")
+				-- print("^2[DEBUG] ps-ui Circle called successfully, waiting for completion...")
 				local timeout = 0
 				while not finished and timeout < 100 do -- 5 second timeout
 					Wait(50)
@@ -102,22 +102,22 @@ function progressbar(text, time, anim)
 		end
 		
    elseif Config.Tiergames[tier] == 'ox' then
-		print("^2[DEBUG] Starting ox skillcheck for tier: " .. tier)
+		-- print("^2[DEBUG] Starting ox skillcheck for tier: " .. tier)
 		-- Try different ox skillcheck formats
 		local success = false
 		
 		-- Method 1: Simple format
 		if lib and lib.skillCheck then
-			print("^3[DEBUG] Trying method 1: simple skillCheck")
+			-- print("^3[DEBUG] Trying method 1: simple skillCheck")
 			success = lib.skillCheck({'easy', 'easy'})
 			
 			if not success then
-				print("^3[DEBUG] Method 1 failed, trying method 2: with keys")
+				-- print("^3[DEBUG] Method 1 failed, trying method 2: with keys")
 				success = lib.skillCheck({'easy', 'easy'}, {'w', 'a', 's', 'd'})
 			end
 			
 			if not success then
-				print("^3[DEBUG] Method 2 failed, trying method 3: single difficulty")
+				-- print("^3[DEBUG] Method 2 failed, trying method 3: single difficulty")
 				success = lib.skillCheck('easy')
 			end
 		else
@@ -125,7 +125,7 @@ function progressbar(text, time, anim)
 			-- Fallback - just return true for testing
 			success = true
 		end
-		print("^2[DEBUG] Ox skillcheck final result: " .. tostring(success))
+		-- print("^2[DEBUG] Ox skillcheck final result: " .. tostring(success))
 		result = success
 		
 	elseif Config.Tiergames[tier] == 'ps_var' then
@@ -134,7 +134,7 @@ function progressbar(text, time, anim)
 		exports['ps-ui']:VarHack(function(success)
 			check = success
 			finished = true
-			print("^2[DEBUG] ps_var result: " .. tostring(success))
+			-- print("^2[DEBUG] ps_var result: " .. tostring(success))
 		end, game['ps_var'].numBlocks, game['ps_var'].time)
 		while not finished do
 			Wait(50)
@@ -201,7 +201,7 @@ function progressbar(text, time, anim)
 	
 	-- Clear animation after minigame completion (success or failure)
 	ClearPedTasks(PlayerPedId())
-	print("^2[DEBUG] Minigame completed, animation cleared, result: " .. tostring(result))
+	-- print("^2[DEBUG] Minigame completed, animation cleared, result: " .. tostring(result))
 	
 	return result
  end

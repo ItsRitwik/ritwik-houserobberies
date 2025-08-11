@@ -189,15 +189,51 @@ RegisterNetEvent('ritwik-houserobbery:server:GetLoot', function(tier, rewardtype
     end
 end)
 
--- TechGuy server event for removing money
-RegisterNetEvent('ritwik-houserobberies:server:removemoney', function(amount)
+-- TechGuy server event for removing payment (money or items)
+RegisterNetEvent('ritwik-houserobberies:server:removepayment', function(tier)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local info = Player.PlayerData.charinfo
     
-    if Player.Functions.GetMoney('cash') >= amount then
-        Player.Functions.RemoveMoney('cash', amount)
-        Log('ID: ' .. src .. ' Name: ' .. info.firstname .. ' ' .. info.lastname .. ' Purchased house intel for $' .. amount, 'techguy')
+    local tierData = Config.TechGuyTierPrices[tier]
+    if not tierData then
+        -- print('[ERROR] Invalid tier provided: ' .. tostring(tier))
+        return
+    end
+    
+    if Config.TechGuyPayment.type == "money" then
+        local amount = tierData.money
+        if Player.Functions.GetMoney('cash') >= amount then
+            Player.Functions.RemoveMoney('cash', amount)
+            Log('ID: ' .. src .. ' Name: ' .. info.firstname .. ' ' .. info.lastname .. ' Purchased house intel for $' .. amount .. ' (Tier ' .. tier .. ')', 'techguy')
+        end
+    elseif Config.TechGuyPayment.type == "item" then
+        local itemName = Config.TechGuyPayment.item
+        local itemAmount = tierData.item_amount
+        local hasItem = Player.Functions.GetItemByName(itemName)
+        
+        if hasItem and hasItem.amount >= itemAmount then
+            Player.Functions.RemoveItem(itemName, itemAmount)
+            Log('ID: ' .. src .. ' Name: ' .. info.firstname .. ' ' .. info.lastname .. ' Purchased house intel for ' .. itemAmount .. 'x ' .. itemName .. ' (Tier ' .. tier .. ')', 'techguy')
+        end
+    end
+end)
+
+-- Server callback to check if player has required item
+QBCore.Functions.CreateCallback('ritwik-houserobberies:server:hasItem', function(source, cb, itemName, requiredAmount)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    
+    if not Player then
+        cb(false)
+        return
+    end
+    
+    local hasItem = Player.Functions.GetItemByName(itemName)
+    if hasItem and hasItem.amount >= requiredAmount then
+        cb(true)
+    else
+        cb(false)
     end
 end)
 

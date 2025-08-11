@@ -85,17 +85,16 @@ Config.TechGuySpawns = { -- Multiple spawn locations for dynamic spawning
 Config.TechGuyModel = "a_m_m_business_01" -- ped model for tech guy
 Config.TechGuyChangeTime = 60 -- Time in minutes before tech guy changes location
 Config.TechGuyPayment = {
-    type = "money", -- "money" or "item"
-    amount = 500, -- amount of money required
-    item = "laptop", -- item required if type is "item"
+    type = "item", -- "money" or "item"
+    item = "oldpaper", -- item required if type is "item"
 }
 Config.TechGuyTierPrices = {
-    [1] = 100,  -- Price for Tier 1 houses
-    [2] = 200,  -- Price for Tier 2 houses  
-    [3] = 350,  -- Price for Tier 3 houses
-    [4] = 500,  -- Price for Tier 4 houses
-    [5] = 750,  -- Price for Tier 5 houses
-    [6] = 1000, -- Price for Tier 6 houses
+    [1] = {money = 100, item_amount = 1},   -- Price for Tier 1 houses - 1 oldpaper or $100
+    [2] = {money = 200, item_amount = 2},   -- Price for Tier 2 houses - 2 oldpaper or $200
+    [3] = {money = 350, item_amount = 3},   -- Price for Tier 3 houses - 3 oldpaper or $350
+    [4] = {money = 500, item_amount = 4},   -- Price for Tier 4 houses - 4 oldpaper or $500
+    [5] = {money = 750, item_amount = 5},   -- Price for Tier 5 houses - 5 oldpaper or $750
+    [6] = {money = 1000, item_amount = 6},  -- Price for Tier 6 houses - 6 oldpaper or $1000
 }
 
 Config.OffSet = {

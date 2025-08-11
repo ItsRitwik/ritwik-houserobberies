@@ -70,11 +70,11 @@
         }
     },
 	["art6"] = {
-        label = "Merp Kitty Art",
+        label = "Metaverse Kitty Art",
         weight = 2500,
         stack = false,
         close = false,
-        description = "Merp",
+        description = "Metaverse",
         client = {
             image = "art6.png",
         }

@@ -343,26 +343,38 @@ RegisterNetEvent("ritwik-houserobberies:client:opentechguy", function(data)
     local techguymenu = {}
     
     for tier = 1, 6 do
-        local tierPrice = Config.TechGuyTierPrices[tier] or 0
+        local tierData = Config.TechGuyTierPrices[tier]
+        local priceText = ""
+        
+        if Config.TechGuyPayment.type == "money" then
+            priceText = "$" .. tierData.money
+        elseif Config.TechGuyPayment.type == "item" then
+            -- Get item label from ox_inventory
+            local itemLabel = "Unknown Item"
+            local itemData = exports.ox_inventory:Items(Config.TechGuyPayment.item)
+            if itemData then
+                itemLabel = itemData.label
+            end
+            priceText = tierData.item_amount .. "x " .. itemLabel
+        end
+        
         if Config.Oxmenu then
             techguymenu[#techguymenu + 1] = {
                 title = "Tier " .. tier .. " Houses",
-                description = "Get intel on Tier " .. tier .. " houses - $" .. tierPrice,
+                description = "Get intel on Tier " .. tier .. " houses - " .. priceText,
                 event = "ritwik-houserobberies:client:buyhouseintel",
                 args = {
-                    tier = tier,
-                    price = tierPrice
+                    tier = tier
                 }
             }
         else
             techguymenu[#techguymenu + 1] = {
                 header = "Tier " .. tier .. " Houses",
-                txt = "Get intel on Tier " .. tier .. " houses - $" .. tierPrice,
+                txt = "Get intel on Tier " .. tier .. " houses - " .. priceText,
                 params = {
                     event = "ritwik-houserobberies:client:buyhouseintel",
                     args = {
-                        tier = tier,
-                        price = tierPrice
+                        tier = tier
                     }
                 }
             }
@@ -391,14 +403,59 @@ end)
 
 RegisterNetEvent("ritwik-houserobberies:client:buyhouseintel", function(data)
     local tier = data.tier
-    local price = data.price
+    local tierData = Config.TechGuyTierPrices[tier]
     
-    -- Check if player has enough money
-    if QBCore.Functions.GetPlayerData().money.cash < price then
-        Notify("You don't have enough cash! Need $" .. price, 'error')
+    if not tierData then
+        Notify("Invalid tier selected!", 'error')
         return
     end
     
+    -- Check if player has required payment
+    local hasPayment = false
+    local paymentText = ""
+    
+    if Config.TechGuyPayment.type == "money" then
+        local price = tierData.money
+        if QBCore.Functions.GetPlayerData().money.cash >= price then
+            hasPayment = true
+            paymentText = "$" .. price
+        else
+            Notify("You don't have enough cash! Need $" .. price, 'error')
+            return
+        end
+    elseif Config.TechGuyPayment.type == "item" then
+        local itemName = Config.TechGuyPayment.item
+        local itemAmount = tierData.item_amount
+        
+        -- Get item label from ox_inventory
+        local itemLabel = "Unknown Item"
+        local itemData = exports.ox_inventory:Items(itemName)
+        if itemData then
+            itemLabel = itemData.label
+        end
+        
+        -- Check if player has the required item amount
+        QBCore.Functions.TriggerCallback('ritwik-houserobberies:server:hasItem', function(hasItem)
+            if hasItem then
+                hasPayment = true
+                paymentText = itemAmount .. "x " .. itemLabel
+                
+                -- Continue with house intel purchase
+                purchaseIntel(tier, paymentText)
+            else
+                Notify("You don't have enough " .. itemLabel .. "! Need " .. itemAmount .. "x", 'error')
+            end
+        end, itemName, itemAmount)
+        return -- Exit here since we're using callback
+    end
+    
+    -- For money payments, continue directly
+    if hasPayment then
+        purchaseIntel(tier, paymentText)
+    end
+end)
+
+function purchaseIntel(tier, paymentText)
     -- Get random house of the selected tier
     local availableHouses = {}
     for k, v in pairs(Config.Houses) do
@@ -414,13 +471,13 @@ RegisterNetEvent("ritwik-houserobberies:client:buyhouseintel", function(data)
     
     local randomHouse = availableHouses[math.random(#availableHouses)]
     
-    -- Remove money from player
-    TriggerServerEvent('ritwik-houserobberies:server:removemoney', price)
+    -- Remove payment from player
+    TriggerServerEvent('ritwik-houserobberies:server:removepayment', tier)
     
     -- Create waypoint on map
     SetNewWaypoint(randomHouse.house.coords.x, randomHouse.house.coords.y)
     
     -- Notify player
-    Notify("Intel purchased! Tier " .. tier .. " house location marked on your map.", 'success')
-end)
+    Notify("Intel purchased for " .. paymentText .. "! Tier " .. tier .. " house location marked on your map.", 'success')
+end
 
